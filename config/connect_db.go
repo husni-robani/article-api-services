@@ -16,8 +16,8 @@ func ConnectDatabase(){
 		User:   os.Getenv("DB_USER"),
         Passwd: os.Getenv("DB_PASS"),
         Net:    "tcp",
-        Addr:   "127.0.0.1:3306",
-        DBName: "article_api_services",
+        Addr:   os.Getenv("DB_HOST"),
+        DBName: os.Getenv("DB_NAME"),
 	}
 
 	var err error
