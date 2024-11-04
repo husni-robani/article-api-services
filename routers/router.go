@@ -14,7 +14,9 @@ func SetupRouter() *gin.Engine {
 		authenticatedRoute := api.Group("")
 		authenticatedRoute.Use(middleware.AuthMiddleware())
 		{
-			authenticatedRoute.POST("/articles", controllers.CreateArticle)
+			authenticatedRoute.POST("/articles/:author_id", controllers.CreateArticle)
+			authenticatedRoute.DELETE("/articles/:article_id", controllers.DeleteArticle)
+			authenticatedRoute.PUT("/articles/:article_id", controllers.UpdateArticle)
 		}
 		
 		api.POST("/register", controllers.Register)
