@@ -20,6 +20,8 @@ func SetupRouter() *gin.Engine {
 
 			authenticatedRoute.POST("/comments/:article_id", controllers.CreateComment)
 			authenticatedRoute.DELETE("/comments/:comment_id", controllers.DeleteComment)
+
+			authenticatedRoute.POST("/categories", controllers.CreateCategory)
 		}
 		
 		api.POST("/register", controllers.Register)
