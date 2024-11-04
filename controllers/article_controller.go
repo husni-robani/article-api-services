@@ -35,3 +35,28 @@ func GetAllArticles(c *gin.Context){
 
 	response.Success(c, http.StatusOK, articles, "Success to get articles")
 }
+
+func CreateArticle(c *gin.Context){
+	var new_article models.Article
+	err := c.ShouldBindJSON(&new_article)
+	if err != nil{
+		response.Error(c, http.StatusBadRequest, "Failed to create new article", err.Error())
+		return
+	}
+
+	statement, err := config.DB.Prepare("INSERT INTO articles (title, content, author_id, category_id) VALUES (?, ?, ?, ?)")
+	if err != nil{
+		response.Error(c, http.StatusInternalServerError, "Failed to prepare statement", err.Error())
+		return
+	}
+
+	result, err := statement.Exec(new_article.Title, new_article.Content, new_article.AuthorId, new_article.CategoryId)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "Failed to execute statement", err.Error())
+	}
+
+	id, _ := result.LastInsertId()
+	new_article.Id = int(id)
+
+	response.Success(c, http.StatusCreated, new_article, "Article created successfully!!")
+}
