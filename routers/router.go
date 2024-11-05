@@ -23,13 +23,14 @@ func SetupRouter() *gin.Engine {
 
 			authenticatedRoute.POST("/comments/:article_id", controllers.CreateComment)
 			authenticatedRoute.DELETE("/comments/:comment_id", controllers.DeleteComment)
-
+			
 			authenticatedRoute.POST("/categories", controllers.CreateCategory)
 		}
 		
 		api.POST("/register", controllers.Register)
         api.POST("/login", controllers.Login)
 		api.GET("/articles", controllers.GetAllArticles)
+		api.GET("/comments/:article_id", controllers.GetComment)
 
 		// endpoint that gives documentation URL in response
 		api.GET("/docs", func (c *gin.Context){
