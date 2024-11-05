@@ -10,6 +10,37 @@ import (
 	"github.com/husni-robani/article-api-services/response"
 )
 
+func GetComment(c *gin.Context){
+	article_id, err := strconv.Atoi(c.Param("article_id"))
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid Article Id", err.Error())
+		return
+	}
+
+	rows, err := config.DB.Query("SELECT * FROM comments WHERE article_id = ?", article_id)
+
+	if err != nil{
+		response.Error(c, http.StatusInternalServerError, "Failed to retrieves comments", err.Error())
+		return
+	}
+
+	defer rows.Close()
+
+	var comments []models.Comment
+	for rows.Next(){
+		var comment models.Comment
+
+		if err := rows.Scan(&comment.Id, &comment.ArticleId, &comment.UserId, &comment.Content, &comment.CreatedAt, &comment.UpdatedAt); err != nil{
+			response.Error(c, http.StatusInternalServerError, "Failed to scan comments", err.Error())
+			return
+		}
+
+		comments = append(comments, comment)
+	}
+
+	response.Success(c, http.StatusOK, comments, "Success to retrieves comments")
+}
+
 func CreateComment(c *gin.Context){
 	article_id, err := strconv.Atoi(c.Param("article_id"))
 	if err != nil{
